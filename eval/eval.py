@@ -63,7 +63,7 @@ def generate(caption, wordtoix, ixtoword, text_encoder, netG, blob_service, copi
         cap_lens = cap_lens.cuda()
         noise = noise.cuda()
 
-    
+
 
     #######################################################
     # (1) Extract text embeddings
@@ -71,7 +71,7 @@ def generate(caption, wordtoix, ixtoword, text_encoder, netG, blob_service, copi
     hidden = text_encoder.init_hidden(batch_size)
     words_embs, sent_emb = text_encoder(captions, cap_lens, hidden)
     mask = (captions == 0)
-        
+
 
     #######################################################
     # (2) Generate fake images
@@ -131,7 +131,7 @@ def generate(caption, wordtoix, ixtoword, text_encoder, netG, blob_service, copi
                         im = fake_imgs[k + 1].detach().cpu()
                     else:
                         im = fake_imgs[0].detach().cpu()
-                            
+
                     attn_maps = attention_maps[k]
                     att_sze = attn_maps.size(2)
 
@@ -152,7 +152,7 @@ def generate(caption, wordtoix, ixtoword, text_encoder, netG, blob_service, copi
                         urls.append(full_path % blob_name)
         if copies == 2:
             break
-    
+
     #print(len(urls), urls)
     return urls
 
@@ -203,7 +203,7 @@ def eval(caption):
     # lead models
     text_encoder, netG = models(len(wordtoix))
     # load blob service
-    blob_service = BlockBlobService(account_name='attgan', account_key=os.environ["BLOB_KEY"])
+    blob_service = BlockBlobService(account_name='iiynere', account_key=os.environ["BLOB_KEY"])
 
     t0 = time.time()
     urls = generate(caption, wordtoix, ixtoword, text_encoder, netG, blob_service)
@@ -223,7 +223,7 @@ def eval(caption):
 
 if __name__ == "__main__":
     caption = "the bird has a yellow crown and a black eyering that is round"
-    
+
     # load configuration
     #cfg_from_file('eval_bird.yml')
     # load word dictionaries
@@ -232,7 +232,7 @@ if __name__ == "__main__":
     text_encoder, netG = models(len(wordtoix))
     # load blob service
     blob_service = BlockBlobService(account_name='attgan', account_key='[REDACTED]')
-    
+
     t0 = time.time()
     urls = generate(caption, wordtoix, ixtoword, text_encoder, netG, blob_service)
     t1 = time.time()
