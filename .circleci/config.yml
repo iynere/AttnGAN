@@ -1,0 +1,11 @@
+version: 2
+jobs:
+  build:
+    machine: true
+    working_directory: AttnGAN
+    steps:
+      - checkout
+
+      - run: cd eval && docker build -t "attngan" -f dockerfile.cpu .
+      - run: docker run -it -e BLOB_KEY="$BLOB_KEY" -e TELEMETRY="$TELEMETRY_KEY" -p 5678:8080 attngan
+      - run: curl -H "Content-Type: application/json" -X POST -d '{"caption":"a picture for rose's linkedin account"}' http://locahost:5678/api/v1.0/bird
